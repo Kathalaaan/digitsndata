@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digits n Data</title>
+    <link rel="icon" href="img/logo1.png" type="image/png">
+    <link rel="stylesheet" href="css2/carousel.css">
+</head>
+<body>
+
+<div class="container">
+    <input type="radio" name="slider" id="item-1" checked>
+    <input type="radio" name="slider" id="item-2">
+    <input type="radio" name="slider" id="item-3">
+    <input type="radio" name="slider" id="item-4">
+    <input type="radio" name="slider" id="item-5">
+    <input type="radio" name="slider" id="item-6">
+    <input type="radio" name="slider" id="item-7">
+    <input type="radio" name="slider" id="item-8">
+    <input type="radio" name="slider" id="item-9">
+    <input type="radio" name="slider" id="item-10">
+  
+    <div class="cards">
+        <a href="case1.html" target="_blank">
+            <label class="card" for="item-1" id="song-1">
+                <img src="Caropics/4.png" alt="song">
+            </label>
+        </a>
+        
+        <a href="case2.html" target="_blank">
+            <label class="card" for="item-2" id="song-2">
+                <img src="Caropics/8.png" alt="song">
+            </label>
+        </a>
+        
+        <a href="case3.html" target="_blank">
+            <label class="card" for="item-3" id="song-3">
+                <img src="Caropics/6.png" alt="song">
+            </label>
+        </a>
+        
+        <a href="case4.html" target="_blank">
+            <label class="card" for="item-4" id="song-4">
+                <img src="Caropics/7.png" alt="song">
+            </label>
+        </a>
+        
+        <a href="case5.html" target="_blank">
+            <label class="card" for="item-5" id="song-5">
+                <img src="Caropics/5.png" alt="song">
+            </label>
+        </a>
+        
+        <a href="case6.html" target="_blank">
+            <label class="card" for="item-6" id="song-6">
+                <img src="Caropics/10.png" alt="song">
+            </label>
+        </a>
+        
+        <a href="case7.html" target="_blank">
+            <label class="card" for="item-7" id="song-7">
+                <img src="Caropics/9.png" alt="song">
+            </label>
+        </a>
+        
+        <a href="case8.html" target="_blank">
+            <label class="card" for="item-8" id="song-8">
+                <img src="Caropics/3.png" alt="song">
+            </label>
+        </a>
+        
+        <a href="case9.html" target="_blank">
+            <label class="card" for="item-9" id="song-9">
+                <img src="Caropics/2.png" alt="song">
+            </label>
+        </a>
+        
+        <a href="case10.html" target="_blank">
+            <label class="card" for="item-10" id="song-10">
+                <img src="Caropics/1.png" alt="song">
+            </label>
+        </a>
+        
+        
+    </div>
+  
+   <!-- Player Section -->
+   <div class="player">
+    <div class="upper-part">
+        <div class="play-icon">
+            <a href="case1.html" target="_blank" id="play-link">
+                <svg width="20" height="20" fill="#2992dc" stroke="#2992dc" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-play" viewBox="0 0 24 24">
+                    <path d="M5 3l14 9-14 9V3z"/>
+                </svg>
+            </a>
+        </div>
+        <div class="info-area" id="test">
+            <!-- 10 Song Info Labels with Links -->
+            <a href="case1.html" target="_blank"><label class="song-info" id="song-info-1"><div class="title">Chaichology Shop SQL Analysis</div><div class="time">6.21</div></label></a>
+            <a href="case2.html" target="_blank"><label class="song-info" id="song-info-2"><div class="title">Friends TV Show SQL Analysis</div><div class="time">5.03</div></label></a>
+            <a href="case3.html" target="_blank"><label class="song-info" id="song-info-3"><div class="title">GYM Workout SQL Analysis</div><div class="time">2.21</div></label></a>
+            <a href="case4.html" target="_blank"><label class="song-info" id="song-info-4"><div class="title">Murder & Mystery SQL Analysis</div><div class="time">3.50</div></label></a>
+            <a href="case5.html" target="_blank"><label class="song-info" id="song-info-5"><div class="title">Panda Conservation SQL Analysis</div><div class="time">4.05</div></label></a>
+            <a href="case6.html" target="_blank"><label class="song-info" id="song-info-6"><div class="title">Pokémon SQL Analysis</div><div class="time">4.00</div></label></a>
+            <a href="case7.html" target="_blank"><label class="song-info" id="song-info-7"><div class="title">Seven Wonders SQL Analysis</div><div class="time">2.30</div></label></a>
+            <a href="case8.html" target="_blank"><label class="song-info" id="song-info-8"><div class="title">Snapchat SQL Analysis</div><div class="time">3.00</div></label></a>
+            <a href="case9.html" target="_blank"><label class="song-info" id="song-info-9"><div class="title">Tinder App SQL Analysis</div> <div class="time">4.15</div></label></a>
+            <a href="case10.html" target="_blank"><label class="song-info" id="song-info-10"><div class="title">YouTube SQL Analysis</div> <div class="time">3.25</div></label></a> 
+        </div>
+    </div>
+        <div class="progress-bar">
+            <span class="progress"></span>
+        </div>
+    </div>
+</div>
+<script>
+    const body = document.body;
+    
+    // Background colors for each slide
+    const colors = ["#ffadad", "#ffdac3", "#fcffb2", "#baffc9", "#bae1ff", "#ffd6ff", "#ffdfba", "#ffffba", "#baffc9", "#d4aaff"];
+    
+    // Links for the play button and labels
+    const links = [
+        'case1.html', 'case2.html', 'case3.html', 'case4.html', 'case5.html', 
+        'case6.html', 'case7.html', 'case8.html', 'case9.html', 'case10.html'
+    ];
+    
+    // Titles for each slide
+    const titles = [
+        "Chaichology Shop SQL Analysis", "Friends TV Show SQL Analysis", "GYM Workout SQL Analysis", 
+        "Murder & Mystery SQL Analysis", "Panda Conservation SQL Analysis", "Pokémon SQL Analysis", 
+        "Seven Wonders SQL Analysis", "Snapchat SQL Analysis", "Tinder App SQL Analysis", 
+        "YouTube SQL Analysis"
+    ];
+
+    // Subtitles and times for each slide
+    const subtitles = [
+        "Digits n Data", "Digits n Data", "Digits n Data", "Digits n Data", "Digits n Data",
+        "Digits n Data", "Digits n Data", "Digits n Data", "Digits n Data", "Digits n Data"
+    ];
+    
+    const times = [
+        "4.05", "4.05", "4.05", "3.45", "4.00", 
+        "4.15", "3.30", "5.00", "4.10", "4.25"
+    ];
+    
+    // Reference to elements that need to be updated
+    const playLink = document.getElementById('play-link');
+    const songTitle = document.querySelector('.song-info .title');
+    const songSubtitle = document.querySelector('.song-info .subtitle');
+    const songTime = document.querySelector('.song-info .time');
+
+    // Event listener to change details dynamically
+    document.querySelectorAll('input[name="slider"]').forEach((input, index) => {
+        input.addEventListener('change', () => {
+            body.style.backgroundColor = colors[index]; // Change background color
+            playLink.setAttribute('href', links[index]); // Update play button link
+            songTitle.textContent = titles[index]; // Update song title
+            songSubtitle.textContent = subtitles[index]; // Update subtitle
+            songTime.textContent = times[index]; // Update time
+        });
+    });
+</script>
+<script src="js2/carousel.js"></script>
+</body>
+</html>

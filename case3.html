@@ -1,0 +1,179 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<title>Digits n Data</title>
+    <link rel="icon" href="img/logo1.png" type="image/png">
+		<link rel="stylesheet" href="css3/main1.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
+
+				<!-- Header -->
+				<header id="header" class="alt">
+					<a href="carousel.html" class="back-arrow">
+						<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+						</svg>
+					</a>
+					<h1><a href="index.html"></a></h1>
+				</header>
+
+				
+
+				<!-- Wrapper -->
+					<section id="wrapper">
+						<header>
+							<div class="inner">
+								
+								<h2>SQL CASE STUDY 3</h2>
+								<h3>GYM WORKOUT SQL Analysis</h3>
+								
+								<p></p>
+							</div>
+						</header>
+						
+					
+						<!-- Content -->
+							<div class="wrapper">
+								<div class="inner">
+									
+									<p>Your challenge is to craft SQL queries to extract insights from the Gym workout database. </p>
+                                    
+									<h3 class="major"></h3>
+									<h3>Tables</h3>
+									<h3 class="major"></h3>
+									<img src="images/T3.png" alt="" style="width:100%; height:auto; margin-top:20px;">
+									<p>
+										<ul>
+										<li>users</li>
+										<li>exercises</li>
+										<li>workout_sessions</li>
+										
+										</ul>
+									</p>
+
+                                    <p>
+										<h3 class="major">Entity Relationship Diagram</h3>
+										<img src="images/T4.png" alt="" style="width:90%; height:auto; margin-top:20px;">
+									</p>
+									
+
+									<h3 class="major">SQL SCHEMA</h3>
+										<ol>
+											
+												
+												<pre>
+													<code>  														
+-- Create Users Table
+CREATE TABLE users (
+    user_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    age INT CHECK (age > 0)
+);
+
+-- Insert Users Data with Explicit user_id
+INSERT INTO users (user_id, name, email, age) VALUES
+(1, 'Nitish Kumar', 'nitish@example.com', 30),
+(2, 'Rakesh', 'rakesh@example.com', 28),
+(3, 'Senthil Kumar', 'senthil@example.com', 35),
+(4, 'Logesh', 'logesh@example.com', 40),
+(5, 'Rahul Majumdar', 'rahul@example.com', 25);
+
+-- Create Exercises Table 
+CREATE TABLE exercises (
+    exercise_id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(user_id) ON DELETE CASCADE, -- Foreign Key Relationship
+    name VARCHAR(100) NOT NULL,
+    category VARCHAR(50),
+    muscle_group VARCHAR(50),
+    equipment VARCHAR(50)
+);
+
+-- Insert Exercises Data with user_id association
+INSERT INTO exercises (user_id, name, category, muscle_group, equipment) VALUES
+(1, 'Bench Press', 'Strength', 'Chest', 'Barbell'),
+(2, 'Squat', 'Strength', 'Legs', 'Barbell'),
+(3, 'Deadlift', 'Strength', 'Back', 'Barbell'),
+(4, 'Pull-ups', 'Strength', 'Back', 'Bodyweight'),
+(5, 'Bicep Curls', 'Strength', 'Arms', 'Dumbbell'),
+(1, 'Running', 'Cardio', 'Legs', 'Treadmill'),
+(2, 'Cycling', 'Cardio', 'Legs', 'Stationary Bike'),
+(3, 'Plank', 'Core', 'Abs', 'Bodyweight'),
+(4, 'Lunges', 'Strength', 'Legs', 'Dumbbell'),
+(5, 'Overhead Press', 'Strength', 'Shoulders', 'Barbell'),
+(1, 'Leg Press', 'Strength', 'Legs', 'Machine'),
+(2, 'Dips', 'Strength', 'Triceps', 'Bodyweight'),
+(3, 'Rowing', 'Cardio', 'Full Body', 'Rowing Machine'),
+(4, 'Jump Rope', 'Cardio', 'Full Body', 'Rope'),
+(5, 'Hanging Leg Raises', 'Core', 'Abs', 'Bodyweight');
+
+-- Create Workout Sessions Table
+CREATE TABLE workout_sessions (
+    session_id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+    workout_date DATE NOT NULL,
+    duration_minutes INT CHECK (duration_minutes > 0),
+    calories_burned INT CHECK (calories_burned >= 0),
+    notes TEXT,
+    intensity_level VARCHAR(20)
+);
+
+-- Insert Workout Sessions Data
+INSERT INTO workout_sessions (user_id, workout_date, duration_minutes, calories_burned, notes, intensity_level) VALUES
+(1, '2025-03-01', 60, 500, 'Great workout!', 'High'),
+(2, '2025-03-02', 45, 400, 'Felt strong today.', 'Medium'),
+(3, '2025-03-03', 30, 300, 'Quick but effective.', 'Low'),
+(4, '2025-03-04', 90, 700, 'Pushed my limits.', 'High'),
+(5, '2025-03-05', 50, 450, 'Solid session.', 'Medium'),
+(1, '2025-03-06', 70, 600, 'Endurance training.', 'High'),
+(2, '2025-03-07', 40, 350, 'Focused on form.', 'Low'),
+(3, '2025-03-08', 55, 480, 'Great pump.', 'Medium'),
+(4, '2025-03-09', 75, 650, 'Pushed hard.', 'High'),
+(5, '2025-03-10', 60, 500, 'Solid gains.', 'Medium');
+															
+														
+</code>
+</pre>
+
+
+            </ol>
+
+			<p>
+				
+					Copy and paste the SQL schema in <a href="https://www.db-fiddle.com/" target="_blank" style="color: #78dc80;">DB Fiddle</a> to perform SQL analysis.
+
+				
+			</p>
+									<h3 class="major">QUESTIONS</h3>
+									<ul style="list-style-type: none; padding: 0; margin: 0;">
+										<li>1) Retrieve all users ?</li>
+<li>2) Get all workout sessions for user_id = 2 ?</li>
+<li>3) Count the number of workouts each user has completed ?</li>
+<li>4) Find the average duration of workouts ?</li>
+<li>5) List all exercises in the 'Strength' category ?</li>
+<li>6) Get the top 3 users who burned the most total calories ?</li>
+<li>7) Find the shortest and longest workout duration ?</li>
+<li>8) Identify the youngest and oldest user ?</li>
+<li>9) List users who have performed 'Squat' ?</li>
+<li>10) Get all workouts on '2025-03-06' ?</li>
+
+									</ul>
+									<p>
+										<h3 style="text-transform: none;">Create a LinkedIn post. Ensure that you tag  
+											<a href="https://www.linkedin.com/company/digits-n-data/?viewAsMember=true" target="_blank" style="color: #FF9933;">Digits n Data</a> and  
+											<a href="https://www.linkedin.com/in/nitish-kumar-516aba28b/" target="_blank" style="color: #4287f5;">Nitish Kumar</a> to let me know how you get on!  
+										</h3>
+									</p>
+									
+									
+									
+                                    
+	</body>
+</html>

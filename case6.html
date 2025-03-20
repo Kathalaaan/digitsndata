@@ -1,0 +1,197 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<title>Digits n Data</title>
+    <link rel="icon" href="img/logo1.png" type="image/png">
+		<link rel="stylesheet" href="css3/main1.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
+
+				<!-- Header -->
+				<header id="header" class="alt">
+					<a href="carousel.html" class="back-arrow">
+						<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+						</svg>
+					</a>
+					<h1><a href="index.html"></a></h1>
+				</header>
+
+				
+
+				<!-- Wrapper -->
+					<section id="wrapper">
+						<header>
+							<div class="inner">
+								
+								<h2>SQL CASE STUDY 6</h2>
+								<h3>Pokémon SQL Analysis</h3>
+								
+								<p></p>
+							</div>
+						</header>
+						
+					
+						<!-- Content -->
+							<div class="wrapper">
+								<div class="inner">
+									
+									<p>Your challenge is to craft SQL queries to extract insights from the Pokémon database. </p>
+                                    
+									<h3 class="major"></h3>
+									<h3>Tables</h3>
+									<h3 class="major"></h3>
+									<img src="images/T9.png" alt="" style="width:100%; height:auto; margin-top:20px;">
+									<p>
+										<ul>
+										<li>Pokémon</li>
+										<li>Trainers</li>
+										<li>Battles</li>
+										<li>PokemonMoves</li>
+										
+										
+										</ul>
+									</p>
+
+                                    <p>
+										<h3 class="major">Entity Relationship Diagram</h3>
+										<img src="images/T10.png" alt="" style="width:90%; height:auto; margin-top:20px;">
+									</p>
+									
+
+									<h3 class="major">SQL SCHEMA</h3>
+										<ol>
+											
+												
+												<pre>
+													<code>  														
+CREATE TABLE Pokémon (
+    PokemonID INT PRIMARY KEY,
+    Name VARCHAR(255),
+    Type VARCHAR(255),
+    EvolutionStage VARCHAR(50)
+);
+
+INSERT INTO Pokémon (PokemonID, Name, Type, EvolutionStage)
+VALUES
+    (1, 'Pikachu', 'Electric', 'Stage 2'),
+    (2, 'Charizard', 'Fire', 'Stage 3'),
+    (3, 'Bulbasaur', 'Grass', 'Stage 1'),
+    (4, 'Jigglypuff', 'Normal', 'Stage 2'),
+    (5, 'Gyarados', 'Water', 'Stage 2'),
+    (6, 'Eevee', 'Normal', 'Stage 1'),
+    (7, 'Machop', 'Fighting', 'Stage 1'),
+    (8, 'Geodude', 'Rock', 'Stage 1'),
+    (9, 'Psyduck', 'Water', 'Stage 1'),
+    (10, 'Rattata', 'Normal', 'Stage 1');
+
+CREATE TABLE Trainers (
+    TrainerID INT PRIMARY KEY,
+    Name VARCHAR(255),
+    Hometown VARCHAR(255),
+    PokemonID INT,
+    FOREIGN KEY (PokemonID) REFERENCES Pokémon(PokemonID)
+);
+
+INSERT INTO Trainers (TrainerID, Name, Hometown, PokemonID)
+VALUES
+    (1, 'Ash Ketchum', 'Pallet Town', 1),
+    (2, 'Misty', 'Cerulean City', 2),
+    (3, 'Brock', 'Pewter City', 3),
+    (4, 'Gary Oak', 'Pallet Town', 4),
+    (5, 'May', 'Petalburg City', 5),
+    (6, 'Serena', 'Vaniville Town', 6),
+    (7, 'Dawn', 'Twinleaf Town', 7),
+    (8, 'Red', 'Pallet Town', 8),
+    (9, 'Blue', 'Pallet Town', 9),
+    (10, 'Cynthia', 'Celestic Town', 10);
+
+CREATE TABLE Battles (
+    BattleID INT PRIMARY KEY,
+    Date DATE,
+    Location VARCHAR(255),
+    TrainerID INT,
+    FOREIGN KEY (TrainerID) REFERENCES Trainers(TrainerID)
+);
+
+INSERT INTO Battles (BattleID, Date, Location, TrainerID)
+VALUES
+    (1, '2025-01-15', 'Cerulean Cape', 1),
+    (2, '2025-02-20', 'Victory Road', 2),
+    (3, '2025-03-10', 'Indigo Plateau', 5),
+    (4, '2025-04-05', 'Pewter City Gym', 7),
+    (5, '2025-05-12', 'Viridian Forest', 9),
+    (6, '2025-06-18', 'Saffron City Gym', 1),
+    (7, '2025-07-22', 'Mt. Moon', 3),
+    (8, '2025-08-30', 'Cinnabar Island', 4);
+
+CREATE TABLE PokemonMoves (
+    MoveID INT PRIMARY KEY,
+    Name VARCHAR(255),
+    Type VARCHAR(255),
+    Power INT
+);
+
+INSERT INTO PokemonMoves (MoveID, Name, Type, Power) VALUES
+(1, 'Thunderbolt', 'Electric', 90),
+(2, 'Flamethrower', 'Fire', 95),
+(3, 'Solar Beam', 'Grass', 120),
+(4, 'Water Gun', 'Water', 40),
+(5, 'Ice Beam', 'Ice', 90),
+(6, 'Psychic', 'Psychic', 90),
+(7, 'Earthquake', 'Ground', 100),
+(8, 'Thunder Wave', 'Electric', 0),
+(9, 'Poison Sting', 'Poison', 15),
+(10, 'Quick Attack', 'Normal', 40),
+(11, 'Bite', 'Dark', 60),
+(12, 'Confusion', 'Psychic', 50),
+(13, 'Ember', 'Fire', 40);
+
+											
+</code>
+</pre>
+
+
+            </ol>
+
+			<p>
+				
+					Copy and paste the SQL schema in <a href="https://www.db-fiddle.com/" target="_blank" style="color: #78dc80;">DB Fiddle</a> to perform SQL analysis.
+
+				
+			</p>
+									<h3 class="major">QUESTIONS</h3>
+									<ul style="list-style-type: none; padding: 0; margin: 0;">
+										<li>1) Find all Pokémon names and their types ?</li>
+<li>2) Find the trainer from 'Petalburg City' ?</li>
+<li>3) List battles that took place after '2025-05-01' ?</li>
+<li>4) Find all Pokémon that are at 'Stage 1' evolution ?</li>
+<li>5) Get the strongest Pokémon move (highest power) ?</li>
+<li>6) Find Battles with Trainers from 'Pallet Town' ?</li>
+<li>7) Find Trainers Who Own a Water-Type Pokémon ?</li>
+<li>8) Count the Number of Trainers for Each Pokémon Type ?</li>
+<li>9) List all Pokémon in alphabetical order (A → Z) ?</li>
+<li>10) Find battles that happened in March ?</li>
+
+
+
+									</ul>
+									<p>
+										<h3 style="text-transform: none;">Create a LinkedIn post. Ensure that you tag  
+											<a href="https://www.linkedin.com/company/digits-n-data/?viewAsMember=true" target="_blank" style="color: #FF9933;">Digits n Data</a> and  
+											<a href="https://www.linkedin.com/in/nitish-kumar-516aba28b/" target="_blank" style="color: #4287f5;">Nitish Kumar</a> to let me know how you get on!  
+										</h3>
+									</p>
+									
+									
+									
+                                    
+	</body>
+</html>
