@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Animated Login Page</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Orbitron', sans-serif;
+    }
+    body {
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0b0016;
+      color: #fff;
+    }
+
+    /* 🔹 Clear, high-quality video */
+    video.bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -2;
+      filter: none;
+      image-rendering: crisp-edges;
+    }
+
+    .form-container {
+      width: 380px;
+      background: rgba(40, 0, 60, 0.8);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(157,78,221,0.8);
+      transform: translateY(50px) scale(0.9);
+      opacity: 0;
+      animation: appear 1s forwards 0.5s;
+    }
+    @keyframes appear {
+      to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+    h2 {
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+      color: #d0aaff;
+      text-shadow: 0 0 10px #bb86fc;
+    }
+    .form-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+    label {
+      display: block;
+      font-size: 0.9rem;
+      color: #e0b3ff;
+      margin-bottom: 5px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+    input:focus {
+      box-shadow: 0 0 10px #bb86fc;
+      background: rgba(255,255,255,0.2);
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #9d4edd, #c77dff);
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    button:hover {
+      box-shadow: 0 0 20px #c77dff;
+      transform: scale(1.05);
+    }
+
+    /* 🔹 Success message styled like secret agent text */
+   .success-msg {
+  margin-top: 15px;
+  color: #00ffb3;
+  font-size: 1rem;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  text-shadow: 0 0 15px #00ffaa;
+  animation: flicker 2s infinite;
+}
+
+.success-msg.show {
+  display: block;
+  opacity: 1;
+}
+
+
+    @keyframes flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+      20%, 24%, 55% { opacity: 0.5; }
+    }
+
+    @media (max-width: 420px) {
+      .form-container {
+        width: 90%;
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <video class="bg-video" autoplay muted loop playsinline>
+    <source src="img/1.mp4" type="video/mp4">
+  </video>
+
+  <div class="form-container">
+    <h2>Login to Enter</h2>
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" required />
+      </div>
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" required />
+      </div>
+      <div class="form-group">
+        <label for="contact">Contact Number (Optional)</label>
+        <input type="tel" id="contact" pattern="[0-9]{10}" placeholder="10-digit number" />
+      </div>
+      <div class="form-group">
+        <label for="email">Email ID</label>
+        <input type="email" id="email" required />
+      </div>
+      <button type="submit">Login</button>
+
+      <!-- 🔹 Updated message -->
+      <div class="success-msg" id="successMsg">
+        👁️‍🗨️ Welcome, Agent. You’ve been added to <br>The Decryption Protocol.
+      </div>
+    </form>
+  </div>
+<!-- paste this into your HTML file, replacing the scriptURL below -->
+<script>
+  const form = document.getElementById('loginForm');
+  const successMsg = document.getElementById('successMsg');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // gather values BEFORE resetting the form
+    const userData = {
+      firstName: document.getElementById('firstName').value.trim(),
+      lastName: document.getElementById('lastName').value.trim(),
+      contact: document.getElementById('contact').value.trim(),
+      email: document.getElementById('email').value.trim()
+    };
+
+    // show success message immediately
+    successMsg.classList.add('show');
+
+    // <-- REPLACE this with the web app URL you got from Apps Script deploy -->
+    const scriptURL = "https://script.google.com/macros/s/AKfycby083QfRPPRhPDTw3jrkur_PlyHl7BLnk-wVQ0SfJkE2uEMTLXkbTnVsH-owsGM7fn8/exec";
+
+    try {
+      // post to the Apps Script endpoint
+      await fetch(scriptURL, {
+        method: "POST",
+        mode: "no-cors", // keeps browser from blocking when using Apps Script web app
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(userData)
+      });
+    } catch (err) {
+      // no-cors prevents reading response; still log if fetch fails badly
+      console.error("Save error:", err);
+    }
+
+    // reset form and optionally redirect
+    form.reset();
+
+    // short delay so user sees success, then redirect (optional)
+    setTimeout(() => {
+      // change or remove this if you don't want the redirect
+      window.location.href = "in.html";
+    }, 1400);
+  });
+</script>
+
+
+
+</body>
+</html>

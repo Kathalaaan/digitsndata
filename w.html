@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Responsive tsParticles Fireworks</title>
+
+  <!-- font-awesome (kept in case you want icons later) -->
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <style>
+    html,body {
+      margin: 0;
+      height: 100%;
+      background:#000;
+      overflow:hidden;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    #tsparticles {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    /* Center message container */
+    #centerMessage {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      color: #fff;
+      text-align: center;
+      font-size: 28px;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      line-height: 1.2;
+      padding: 14px 22px;
+      background: rgba(0,0,0,0.28);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(6px) saturate(120%);
+      /* allow clicks through so overlay/particles work */
+      pointer-events: none; /* keep this on the wrapper */
+      opacity: 0; /* fade-in starts from 0 */
+    }
+
+    /* this inner wrapper will accept pointer events so the button can be clicked */
+    #centerContent {
+      pointer-events: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    /* smaller screens */
+    @media (max-width: 600px) {
+      #centerMessage {
+        font-size: 18px;
+        padding: 10px 14px;
+      }
+    }
+
+    /* Fade-in for the entire message */
+    .fade-in {
+      animation: fadeInUp 900ms ease-out forwards;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translate(-50%, calc(-50% + 8px)); }
+      to   { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+    /* Glow animation for text */
+    .glow {
+      animation: textGlow 1600ms ease-in-out infinite alternate;
+      /* improve readability */
+      text-shadow:
+        0 0 6px rgba(255,255,255,0.08),
+        0 0 18px rgba(255,255,255,0.04);
+    }
+    @keyframes textGlow {
+      from {
+        text-shadow:
+          0 0 6px rgba(255,255,255,0.08),
+          0 0 18px rgba(255,255,255,0.04),
+          0 0 28px rgba(255,160,64,0.05);
+        transform: translateZ(0);
+        filter: drop-shadow(0 0 2px rgba(255,255,255,0.02));
+      }
+      to {
+        text-shadow:
+          0 0 10px rgba(255,255,255,0.12),
+          0 0 28px rgba(255,120,64,0.14),
+          0 0 48px rgba(255,80,160,0.06);
+        transform: translateZ(0);
+        filter: drop-shadow(0 0 6px rgba(255,120,64,0.06));
+      }
+    }
+
+    /* typing caret style (simulated with border-right) */
+    .typing {
+      display: inline-block;
+      white-space: pre-wrap;
+      border-right: 2px solid rgba(255,255,255,0.85);
+      box-sizing: content-box;
+      animation: blinkCaret 900ms steps(1) infinite;
+      font-weight: 500;
+    }
+    @keyframes blinkCaret {
+      0% { border-color: rgba(255,255,255,0.85); }
+      50% { border-color: rgba(255,255,255,0.0); }
+      100% { border-color: rgba(255,255,255,0.85); }
+    }
+
+    /* when typing finished remove caret */
+    .typing.done {
+      border-right: none;
+      animation: none;
+    }
+
+    /* strong text style */
+    #centerMessage strong {
+      display: block;
+      margin-top: 6px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    /* ---------- Button styles ---------- */
+    a:link { text-decoration:none; }
+
+    .vn-blue a {
+      display:inline-block;
+      position:relative;
+      margin:0;
+      padding:12px 22px;
+      color:#fff;
+      transition:all 0.24s ease;
+      border-radius:8px;
+      font-weight:600;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      text-decoration: none;
+      pointer-events: auto;
+      background-color:#2980b9;
+      border: 1px solid rgba(255,255,255,0.06);
+      letter-spacing: 0.6px;
+    }
+
+    .vn-blue a:hover { background: #206a95; }
+
+    /* reminder message under the button */
+    #reminder {
+      font-size: 14px;
+      color: rgba(255,255,255,0.9);
+      opacity: 0.95;
+      font-weight: 500;
+      margin-top: 2px;
+      letter-spacing: 0.2px;
+    }
+
+    /* small responsive tweak */
+    @media (max-width: 480px) {
+      #centerMessage { width: 92%; padding: 10px; }
+      .vn-blue a { padding: 10px 16px; font-size: 15px; }
+      #reminder { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Center Message (we'll type into the two spans) -->
+  <div id="centerMessage" aria-live="polite" role="status">
+    <span id="line1" class="glow typing" aria-hidden="true"></span>
+    <strong><span id="line2" class="glow typing" aria-hidden="true"></span></strong>
+
+    <!-- interactive area placed under the typed lines -->
+    <div id="centerContent" role="group" aria-label="Download area">
+      <!-- The download button (no rocket icon) -->
+      <div class="vn-blue">
+        <a href="Assets/Week 1.pdf"
+           class="js-download"
+           data-pdf-src="Assets/Week 1.pdf"
+           data-filename="digits-n-data-week1-challenge.pdf"
+           role="button"
+           aria-label="Download PDF - Digits n Data Week 1">
+          DOWNLOAD PDF
+        </a>
+      </div>
+
+      <!-- reminder message -->
+      <div id="reminder" aria-hidden="false">Don't forget to post in Linkedin and tag Digits n Data ,Nitish Kumar and Muskan Kashyap</div>
+    </div>
+  </div>
+
+  <!-- particles container -->
+  <div id="tsparticles" aria-hidden="true"></div>
+
+  <!-- audio sources -->
+  <audio id="sfx1" preload="auto" src="https://particles.js.org/audio/explosion0.mp3"></audio>
+  <audio id="sfx2" preload="auto" src="https://particles.js.org/audio/explosion1.mp3"></audio>
+  <audio id="sfx3" preload="auto" src="https://particles.js.org/audio/explosion2.mp3"></audio>
+
+  <!-- minimal unlock UI (only shown when needed) -->
+  <div id="sound-unlock" aria-hidden="true" style="position:fixed;left:12px;right:12px;bottom:18px;z-index:20000;display:none;justify-content:center;align-items:center;pointer-events:auto">
+    <div class="pill" id="unlockBtn" style="background:rgba(0,0,0,0.7);color:#fff;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,0.08);cursor:pointer;font-family:system-ui, -apple-system, 'Segoe UI', Roboto, Arial;">
+      🔊 Enable sound
+    </div>
+  </div>
+
+  <script type="module">
+    import { tsParticles } from "https://cdn.jsdelivr.net/npm/@tsparticles/engine@3.1.0/+esm";
+    import { loadAll } from "https://cdn.jsdelivr.net/npm/@tsparticles/all@3.1.0/+esm";
+
+    // ---------------- tsParticles + Audio setup ----------------
+    await loadAll(tsParticles);
+
+    const sounds = [
+      document.getElementById('sfx1'),
+      document.getElementById('sfx2'),
+      document.getElementById('sfx3')
+    ];
+    sounds.forEach(s => { try { s.volume = 1; } catch(e){} });
+
+    function playExplosion() {
+      try {
+        const src = sounds[Math.floor(Math.random() * sounds.length)].src;
+        const a = new Audio(src);
+        a.volume = 1;
+        a.play().catch(()=>{});
+      } catch (e) {}
+    }
+
+    // base particle config (same as you had)
+    const baseConfig = {
+      name: "Fireworks Mask",
+      fullScreen: { enable: true, zIndex: 0 },
+      background: {
+        color: "#000000",
+        image: "url('https://particles.js.org/images/background3.jpg')",
+        position: "50% 50%",
+        repeat: "no-repeat",
+        size: "cover"
+      },
+      backgroundMask: { enable: true, cover: { color: "#000" } },
+      emitters: {
+        direction: "top",
+        life: { count: 0, duration: 0.1, delay: 0.1 },
+        rate: { delay: 0.15, quantity: 2 },
+        size: { width: 100, height: 0 },
+        position: { y: 100, x: 50 }
+      },
+      particles: {
+        color: { value: "#fff" },
+        number: { value: 2 },
+        destroy: {
+          bounds: { top: 30 },
+          mode: "split",
+          split: {
+            count: 1,
+            factor: { value: 0.333333 },
+            rate: { value: 100 },
+            particles: {
+              stroke: { width: 0 },
+              color: { value: ["#ff595e", "#ffca3a", "#8ac926", "#1982c4", "#6a4c93"] },
+              number: { value: 0 },
+              collisions: { enable: false },
+              destroy: { bounds: { top: 0 } },
+              opacity: {
+                value: { min: 0.1, max: 1 },
+                animation: { enable: true, speed: 0.2, sync: false, startValue: "max", destroy: "min" }
+              },
+              effect: { type: "trail", options: { trail: { length: { min: 5, max: 10 } } } },
+              shape: { type: "star" },
+              size: { value: 2, animation: { enable: true } },
+              life: { count: 1, duration: { value: { min: 1, max: 2 } } },
+              move: {
+                enable: true,
+                gravity: { enable: true, acceleration: 9.81, inverse: false },
+                decay: 0.1,
+                speed: { min: 10, max: 25 },
+                direction: "outside",
+                outModes: "destroy"
+              }
+            }
+          }
+        },
+        life: { count: 1 },
+        effect: { type: "trail", options: { trail: { length: { min: 10, max: 30 }, minWidth: 1, maxWidth: 1 } } },
+        rotate: { path: true },
+        shape: { type: "circle" },
+        size: { value: 1 },
+        move: {
+          enable: true,
+          gravity: { acceleration: 15, enable: true, inverse: true, maxSpeed: 100 },
+          speed: { min: 10, max: 20 },
+          outModes: { default: "destroy", top: "none" }
+        }
+      }
+    };
+
+    function configForWidth(w) {
+      const cfg = JSON.parse(JSON.stringify(baseConfig));
+      if (w <= 480) {
+        cfg.emitters.size.width = 60;
+        cfg.emitters.rate.quantity = 1;
+        cfg.particles.move.speed = { min: 6, max: 12 };
+      } else if (w <= 1024) {
+        cfg.emitters.size.width = 90;
+        cfg.emitters.rate.quantity = 2;
+      } else {
+        cfg.emitters.size.width = 130;
+        cfg.emitters.rate.quantity = 3;
+      }
+      return cfg;
+    }
+
+    let container = null;
+    async function loadScene() {
+      if (container) {
+        try { await container.destroy(); } catch (e) {}
+      }
+      container = await tsParticles.load({
+        id: "tsparticles",
+        options: configForWidth(window.innerWidth)
+      });
+
+      // Monitor emissions and play SFX
+      let last = 0;
+      function monitor() {
+        try {
+          const count = container.particles.count;
+          if (count > last + 1) playExplosion();
+          last = count;
+        } catch (e) {}
+        requestAnimationFrame(monitor);
+      }
+      monitor();
+    }
+
+    // start particles
+    await loadScene();
+    window.addEventListener("resize", () => {
+      clearTimeout(window.__r);
+      window.__r = setTimeout(loadScene, 300);
+    });
+
+    // ---------------- Autoplay/unlock logic ----------------
+    async function tryAutoplayOnce() {
+      try {
+        const a = new Audio(sounds[0].src);
+        a.volume = 1;
+        await a.play();
+        try { a.pause(); } catch (e) {}
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    let audioCtx = null;
+    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { audioCtx = null; }
+    async function tryResumeAudioContext() {
+      if (!audioCtx) return false;
+      try {
+        if (audioCtx.state === 'suspended') await audioCtx.resume();
+        return audioCtx.state === 'running';
+      } catch (e) { return false; }
+    }
+
+    async function tryAutoplayAggressive(timeoutMs = 3000, intervalMs = 300) {
+      const start = performance.now();
+      if (await tryAutoplayOnce()) return true;
+      if (await tryResumeAudioContext()) return true;
+
+      return new Promise((resolve) => {
+        const id = setInterval(async () => {
+          if (performance.now() - start > timeoutMs) {
+            clearInterval(id);
+            resolve(false);
+            return;
+          }
+          if (await tryAutoplayOnce()) { clearInterval(id); resolve(true); return; }
+          if (await tryResumeAudioContext()) { clearInterval(id); resolve(true); return; }
+        }, intervalMs);
+      });
+    }
+
+    // overlay elements
+    const unlockEl = document.getElementById('sound-unlock');
+    const unlockBtn = document.getElementById('unlockBtn');
+
+    async function attemptAndMaybeShowOverlay() {
+      const ok = await tryAutoplayAggressive(2500, 300);
+      if (ok) {
+        unlockEl.style.display = 'none';
+        unlockEl.setAttribute('aria-hidden', 'true');
+        return;
+      }
+
+      // show overlay (only when autoplay didn't succeed)
+      unlockEl.style.display = 'flex';
+      unlockEl.setAttribute('aria-hidden', 'false');
+
+      const unlockHandler = async () => {
+        await tryResumeAudioContext();
+        const succeeded = await tryAutoplayOnce();
+        if (!succeeded) {
+          for (const s of sounds) {
+            try { await s.play(); s.pause(); s.currentTime = 0; } catch (e) {}
+          }
+        }
+        unlockEl.style.display = 'none';
+        unlockEl.setAttribute('aria-hidden', 'true');
+        unlockBtn.removeEventListener('click', unlockHandler);
+        unlockBtn.removeEventListener('keydown', keyHandler);
+      };
+      const keyHandler = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          unlockHandler();
+        }
+      };
+      unlockBtn.addEventListener('click', unlockHandler, { once: true });
+      unlockBtn.addEventListener('keydown', keyHandler, { once: true });
+    }
+
+    // run autoplay attempt
+    attemptAndMaybeShowOverlay();
+
+    // ---------------- Center message typing + animations ----------------
+    const messageEl = document.getElementById('centerMessage');
+    const line1El = document.getElementById('line1');
+    const line2El = document.getElementById('line2');
+
+    // the messages to type
+    const line1Text = "Congratulations! You successfully completed the";
+    const line2Text = "Digits n Data Week 1 SQL Challenge";
+
+    // typing options
+    const typingSpeed = 36; // ms per char (adjust for faster/slower)
+    const linePause = 250; // pause between lines
+    const startDelay = 400; // wait before starting fade-in/typing
+
+    // helper to type into an element (returns a Promise)
+    function typeText(el, text, speed) {
+      return new Promise((resolve) => {
+        el.classList.remove('done');
+        el.textContent = '';
+        let i = 0;
+        function step() {
+          if (i < text.length) {
+            el.textContent += text.charAt(i);
+            i++;
+            setTimeout(step, speed + Math.random() * 20); // slight jitter for realism
+          } else {
+            el.classList.add('done');
+            resolve();
+          }
+        }
+        step();
+      });
+    }
+
+    // orchestrate fade-in + typing
+    async function showAndType() {
+      // small delay so page loads feel smooth
+      await new Promise(r => setTimeout(r, startDelay));
+      // add fade-in class (makes opacity:1 and lifts into place)
+      messageEl.classList.add('fade-in');
+
+      // start typing line 1, then line 2
+      await typeText(line1El, line1Text, typingSpeed);
+      await new Promise(r => setTimeout(r, linePause));
+      await typeText(line2El, line2Text, typingSpeed);
+
+      // after typing, briefly pulse the glow and remove caret
+      line1El.classList.add('done');
+      line2El.classList.add('done');
+
+      // subtle finishing flourish: quick glow pulse
+      messageEl.animate(
+        [
+          { opacity: 1, transform: 'translate(-50%, -50%) scale(0.996)' },
+          { opacity: 1, transform: 'translate(-50%, -50%) scale(1.004)' },
+          { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' }
+        ],
+        { duration: 650, easing: 'ease-out' }
+      );
+    }
+
+    // kick it off (no user gesture required for visual typing)
+    showAndType();
+
+    // ================== DOWNLOAD BUTTON JS ==================
+    // click handler attached to any .js-download anchor
+    // It will attempt a fetch->blob download; if that fails it will fall back to an anchor click
+    async function forceDownload(url, filename) {
+      try {
+        // Try to fetch the PDF as a blob
+        const resp = await fetch(url, { mode: 'cors' });
+        if (!resp.ok) throw new Error('Network response not ok');
+        const blob = await resp.blob();
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = filename || (url.split('/').pop() || 'download.pdf');
+        document.body.appendChild(link);
+        link.click();
+        // cleanup
+        setTimeout(() => {
+          URL.revokeObjectURL(link.href);
+          try { link.remove(); } catch (e) {}
+        }, 1500);
+        return true;
+      } catch (err) {
+        // fallback to simple anchor: will work for same-origin or servers that send Content-Disposition
+        return false;
+      }
+    }
+
+    document.addEventListener('click', async (e) => {
+      const a = e.target.closest && e.target.closest('.js-download');
+      if (!a) return;
+      e.preventDefault();
+
+      const url = a.dataset.pdfSrc || a.href;
+      const filename = a.dataset.filename || (url ? url.split('/').pop() : 'download.pdf');
+
+      // try forced fetch download
+      const ok = await forceDownload(url, filename);
+      if (!ok) {
+        // fallback: navigate the anchor (this will either open or download depending on headers/browser)
+        const fallbackLink = document.createElement('a');
+        fallbackLink.href = url;
+        fallbackLink.download = filename; // still try to hint download
+        document.body.appendChild(fallbackLink);
+        fallbackLink.click();
+        setTimeout(() => { try { fallbackLink.remove(); } catch (e) {} }, 1000);
+      } else {
+        // optional feedback
+        // (placed low so it doesn't conflict with animations)
+        const rem = document.getElementById('reminder');
+        if (rem) rem.textContent = "Downloaded ✓";
+        setTimeout(()=> { if (rem) rem.textContent = "Don't forget to post and tag us in Linkedin"; }, 1800);
+      }
+    });
+
+  </script>
+</body>
+</html>

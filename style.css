@@ -1,0 +1,506 @@
+/* -------------------------------
+   MARVEL STYLES (original, unchanged)
+   ------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Section & Background Video */
+section.hero {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  padding: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #FE0000;
+  overflow: hidden;
+}
+
+section.hero video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+/* Header */
+header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+}
+
+header .logo {
+  max-width: 100px;
+}
+
+header .toggle {
+  display: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #fff;
+}
+
+header ul.navigation {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+}
+
+header ul.navigation li a {
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 400;
+  transition: color 0.3s;
+}
+
+header ul.navigation li a:hover {
+  color: #000;
+}
+
+/* Content */
+.content {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1;
+  gap: 40px;
+}
+
+.content .textBox {
+  max-width: 700px;
+}
+
+.content .textBox h2 {
+  font-size: 2.5em;
+  line-height: 1.3em;
+  font-weight: 700;
+  word-spacing: 10px;
+}
+
+.content .textBox h2 span {
+  text-transform: uppercase;
+  font-size: 2.8em;
+  font-weight: 900;
+}
+
+.content .textBox a {
+  display: inline-block;
+  margin-top: 25px;
+  padding: 12px 35px;
+  background: #fff;
+  color: #000;
+  font-weight: 600;
+  border: 2px solid #fff;
+  text-decoration: none;
+  transition: 0.4s ease;
+  border-radius: 4px;
+}
+
+.content .textBox a:hover {
+  background: transparent;
+  color: #fff;
+}
+
+/* Responsive - Hero */
+@media (max-width: 1024px) {
+  section.hero { padding: 80px 50px; }
+  header { padding: 20px 50px; }
+  .content { flex-direction: column; text-align: center; }
+  .content .textBox { max-width: 90%; }
+  .content .textBox h2 { font-size: 2.2em; }
+  .content .textBox h2 span { font-size: 2.5em; }
+}
+
+@media (max-width: 768px) {
+  section.hero { padding: 60px 30px; }
+  header { padding: 15px 30px; }
+  header .toggle { display: block; z-index: 11; }
+  header ul.navigation { position: fixed; top:0; right:-100%; width:220px; height:100vh; background:rgba(0,0,0,0.9); flex-direction:column; justify-content:center; align-items:center; gap:25px; transition:0.4s ease;}
+  header ul.navigation.active { right: 0; }
+  .content { flex-direction: column; align-items: flex-start; text-align:left; }
+  .content .textBox h2 { font-size: 1.8em; }
+  .content .textBox h2 span { font-size: 2em; }
+}
+
+@media (max-width: 480px) {
+  section.hero { padding: 50px 20px; }
+  header { padding: 10px 20px; }
+  header .logo { max-width: 100px; }
+  .content .textBox h2 { font-size: 1.5em; }
+  .content .textBox h2 span { font-size: 1.8em; }
+  .content .textBox a { padding: 8px 25px; font-size: 13px; }
+}
+
+/* Character slider styles (unchanged) */
+#welcomeMsg {
+  font-family: 'Cinzel', serif;
+  font-size: 2rem;
+  margin-top: 25px;
+  background: linear-gradient(90deg, #f5c542, #d4af37, #f5c542);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  display: none;
+  text-transform: uppercase;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#marvel-characters {
+  background: maroon;
+  padding: 60px 0;
+  text-align: center;
+}
+
+#marvel-characters h1 {
+  background: linear-gradient(90deg, #f5c542, #d4af37, #f5c542);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: 'Cinzel', serif;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box {
+  width: 350px;
+  height: 610px;
+  background: #1E1E26;
+  border-radius: 10px;
+  box-shadow: 2px 10px 12px rgba(0, 0, 0, .5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 10px;
+  transition: all ease .3s;
+}
+
+.box:hover {
+  background-color: #17171D;
+  transform: scale(1.02);
+}
+
+.box:hover .marvel {
+  color: #C0292B;
+  transition: color 0.5s ease;
+}
+
+.model { height: 350px; max-height:100%; max-width:100%; }
+.details { display:flex; flex-direction:column; align-items:center; width:300px; }
+.details p { font-weight:500; color:#6A6A74; text-align:center; margin-top:20px; font-size:15px; }
+.marvel { color:#32323E; font-weight:bold; letter-spacing:2px; font-family:'Bebas Kai', sans-serif; font-size:25px; }
+.logo { height:100px; }
+
+@media(max-width:720px) {
+  .box { width:90%; height:480px; }
+  .model { height:240px; }
+  .details p { font-size:13px; width:250px; }
+  #marvel-characters h1 { font-size:1.8rem; }
+}
+
+/* -------------------------------
+   FANTA SECTION (scoped under #fanta-section)
+   Immediate transition after characters
+   ------------------------------- */
+
+@font-face {
+  font-family: "Product Sans";
+  src: url("Fonts/Product Sans Regular.ttf");
+}
+@font-face {
+  font-family: "Product Sans Bold";
+  src: url("Fonts/Product Sans Bold.ttf");
+}
+
+/* Scope everything to #fanta-section to avoid clashes */
+#fanta-section {
+  font-family: "Product Sans", sans-serif;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Section one - Fanta visual */
+#fanta-section .one {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  background: #1c172a; /* dark purple */
+  position: relative;
+}
+
+#fanta-section .one h1 {
+  font-size: 25vw;
+  font-family: "Product Sans Bold";
+  color: #fff;
+  position: relative;
+  z-index: 1; /* Text goes behind */
+}
+
+#fanta-section .one img {
+  position: absolute;
+  z-index: 5; /* Images stay above the text */
+}
+
+
+/* images */
+#fanta-section #fanta,
+#fanta-section #orange-cut,
+#fanta-section #orange,
+#fanta-section #leaf,
+#fanta-section #leaf2,
+#fanta-section #leaf3 {
+  position: absolute;
+  transition: all cubic-bezier(0.19,1,0.22,1) 0.5s;
+}
+
+#fanta-section #fanta { width: 60%; z-index: 4; }
+#fanta-section #orange-cut { top: 10%; left: 32%; width: 15%; z-index: 2; }
+#fanta-section #orange { width: 20%; z-index: 3; top: 55%; right: 30%; }
+#fanta-section #leaf { top: 10%; left: 0%; transform: rotate(60deg); width: 18%; }
+#fanta-section #leaf2 { top: 70%; left: 80%; transform: rotate(-90deg); width: 12%; }
+#fanta-section #leaf3 { top: 10%; right: 0%; width: 20%; }
+
+/* Section two - description */
+#fanta-section .two {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  background: #3f2a52; /* darker purple */
+  flex-wrap: wrap;
+}
+
+#fanta-section .lft-two, #fanta-section .rght-two {
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  flex-direction:column;
+  gap:5vh;
+  width:50%;
+  height:100%;
+}
+
+#fanta-section .lft-two svg { margin-top:50vh; width:90%; transform:rotateX(50deg); }
+#fanta-section .rght-two h1 { color:#fff; font-size:5vw; }
+#fanta-section .rght-two p { font-size:1.1vw; color:#fff; width:80%; line-height:1.5; }
+
+/* Responsive adjustments for Fanta block */
+@media (max-width:1024px) {
+  #fanta-section .rght-two h1 { font-size:6vw; }
+  #fanta-section .rght-two p { font-size:1.6vw; }
+}
+
+@media (max-width:768px) {
+  #fanta-section .one h1 { font-size:35vw; }
+  #fanta-section #fanta { transform: scale(1.0); transform-origin:center center; }
+  #fanta-section #orange { width:35%; top:65%; right:5%; }
+  #fanta-section #orange-cut { width:28%; top:12%; left:36%; }
+
+  #fanta-section .two { flex-direction:column; height:auto; padding:10vh 0; }
+  #fanta-section .lft-two, #fanta-section .rght-two { width:100%; align-items:center; text-align:center; }
+  #fanta-section .rght-two h1 { font-size:9vw; }
+  #fanta-section .rght-two p { font-size:3.5vw; width:90%; }
+}
+
+@media (max-width:480px) {
+  #fanta-section .one h1 { font-size:45vw; }
+  #fanta-section #fanta { width:115%; top:20%; left:-7%; }
+  #fanta-section #orange { width:40%; top:70%; right:5%; }
+  #fanta-section #orange-cut { width:32%; top:15%; left:38%; }
+  #fanta-section .rght-two p { font-size:4vw; }
+}
+
+
+/* ===============================
+   SHOE CARDS SECTION (Take a Quiz)
+   =============================== */
+#shoe-cards {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #2b0c46; /* dark purple */
+  overflow: hidden;
+  padding: 4rem 1rem;
+}
+
+#shoe-cards .quiz-heading {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 3rem;
+  font-family: "Poppins", sans-serif;
+  text-shadow: 0 0 15px rgba(255,255,255,0.3);
+}
+
+#shoe-cards .container {
+  width: 90%;
+  max-width: 1100px;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+#shoe-cards .card {
+  position: relative;
+  width: 320px;
+  height: 430px;
+  border-radius: 15px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  padding: 1.5rem;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  color: #fff;
+}
+
+#shoe-cards .card.red { background: #a62121; }
+#shoe-cards .card.blue { background: #2ecc71; }
+#shoe-cards .card.green { background: rgb(70, 26, 113) ; }
+
+
+#shoe-cards .shoe {
+  height: 230px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.5s ease;
+}
+
+#shoe-cards .shoe img {
+  max-width: 100%;
+  height: auto;
+  transition: transform 0.5s ease;
+  filter: drop-shadow(5px 10px 15px rgba(0, 0, 0, 0.4));
+}
+
+#shoe-cards .card:hover .shoe img {
+  transform: translate(-20px, -40px) rotate(-20deg);
+}
+
+#shoe-cards .info {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+#shoe-cards .info h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+#shoe-cards .info p {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+#shoe-cards .price {
+  margin-top: 0.8rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+#shoe-cards .btns {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+#shoe-cards .buy {
+  background: #141414;
+  color: #fff;
+  padding: 0.6rem 2rem;
+  border: none;
+  border-radius: 0.3rem;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+#shoe-cards .buy:hover {
+  background: #3a3a3a;
+}
+
+#shoe-cards .fav {
+  background: #fff;
+  padding: 0.6rem;
+  border-radius: 50%;
+  border: 1px solid #000;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#shoe-cards .fav svg {
+  height: 22px;
+  width: 22px;
+}
+
+#shoe-cards .fav:hover {
+  background: #000;
+}
+
+#shoe-cards .fav:hover svg {
+  stroke: #fff;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  #shoe-cards .container {
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  #shoe-cards .quiz-heading {
+    font-size: 2.2rem;
+  }
+  #shoe-cards .container {
+    flex-direction: column;
+    align-items: center;
+  }
+  #shoe-cards .card {
+    width: 90%;
+  }
+}
+
+

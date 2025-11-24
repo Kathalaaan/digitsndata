@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Quiz Blaster — Responsive Vanilla JS + Sound</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#000;
+    --accent:#ffd600;
+    --font:"Press Start 2P",cursive;
+  }
+
+  /* ---------- Basic layout ---------- */
+  html,body{height:100%;width:100%;margin:0;padding:0;background:var(--bg);color:#fff;overflow:hidden}
+  body{font-family:var(--font);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+  #game-container{position:fixed;inset:0;overflow:hidden;z-index:2}
+  #space-background{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .star-layer{position:absolute;width:200%;height:100%;top:0;left:0}
+  .star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;opacity:.8}
+
+  /* Intro overlay */
+  #intro-container{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6));z-index:10}
+  #intro-image{width:min(80vw,640px);height:auto;cursor:pointer;display:block;object-fit:contain}
+
+  /* Player */
+  .player{position:absolute;width:12vmin;height:12vmin;min-width:48px;min-height:48px;z-index:12;transform:translate(-50%,-50%)}
+  .player img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;image-rendering:pixelated}
+
+  /* Trail & bullets */
+  .trail-point{position:absolute;border-radius:50%;z-index:9;pointer-events:none;filter:blur(.5px)}
+  .bullet{position:absolute;border-radius:50%;z-index:9;pointer-events:none;box-shadow:0 0 8px rgba(255,255,255,.9)}
+
+  /* UI text */
+  .question{position:absolute;top:2.5vh;left:50%;transform:translateX(-50%);font-size:3.2vmin;text-align:center;z-index:15;max-width:88vw;line-height:1.1}
+  .score,.timer,.question-count{position:fixed;z-index:15;font-size:2.4vmin;padding:.4rem;background:rgba(0,0,0,.5);border-radius:6px}
+  .score{right:1.2vw;bottom:1.2vh;color:#5ad}
+  .timer{left:50%;bottom:1.2vh;transform:translateX(-50%);color:var(--accent)}
+  .question-count{left:1.2vw;bottom:1.2vh}
+
+  /* Answers (floating asteroids) */
+  .answer{position:absolute;width:13vmin;height:13vmin;min-width:56px;min-height:56px;border-radius:10px;display:flex;align-items:center;justify-content:center;text-align:center;z-index:11;color:#fff;padding:.4rem;background-size:cover;background-position:center;box-shadow:0 6px 14px rgba(0,0,0,.6);user-select:none}
+  .answer .label{font-size:2vmin;line-height:1;pointer-events:none}
+
+  /* Feedback & Game over */
+  .feedback{position:absolute;z-index:18;padding:.6rem 1rem;font-size:2.6vmin;border-radius:6px}
+  .game-over{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:20;padding:1rem;text-align:center;background:rgba(0,0,0,.85);border-radius:10px;min-width:220px}
+
+  /* Animations */
+  @keyframes scrollStars{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+  @keyframes floatMove{0%{transform:translate(-50%,-50%) translateY(0)}50%{transform:translate(-50%,-50%) translateY(-7px)}100%{transform:translate(-50%,-50%) translateY(0)}}
+
+  /* Responsive font sizing */
+  @media (max-width:600px){
+    .question{font-size:4.2vmin;top:3vh}
+    .score,.timer,.question-count{font-size:3.4vmin}
+    .answer .label{font-size:3.5vmin}
+  }
+  @media (min-width:1200px){
+    .question{font-size:22px}
+    .score,.timer,.question-count{font-size:16px}
+    .answer .label{font-size:14px}
+  }
+
+  /* small button style inside game-over */
+  #replayBtn{font-family:var(--font);padding:.6rem 1rem;border-radius:6px;border:none;background:#1e90ff;color:#fff;cursor:pointer}
+  #replayBtn:active{transform:scale(.98)}
+</style>
+</head>
+<body>
+  <div id="game-container" aria-hidden="false"></div>
+  <div id="space-background" aria-hidden="true"></div>
+
+  <div id="intro-container">
+    <div style="text-align:center">
+      <img id="intro-image" src="https://mattcannon.games/codepen/quiz/start-game.png" alt="Start Game — Tap to begin">
+      <div style="margin-top:10px;font-size:12px;color:#ddd;text-align:center">Tap / Click the image to start (enables sound)</div>
+    </div>
+  </div>
+
+<script>
+/* ========== WebAudio setup & sound design (no external files) ========== */
+let audioCtx = null;
+function ensureAudioContext() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  // mobile browsers require resume on user gesture
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+/* Play a short blaster / shoot sound */
+function playShoot() {
+  if (!audioCtx) return;
+  const t = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'sawtooth';
+  // quick pitch sweep for a blaster
+  osc.frequency.setValueAtTime(800, t);
+  osc.frequency.exponentialRampToValueAtTime(1800, t + 0.07);
+  gain.gain.setValueAtTime(0.25, t);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start(t);
+  osc.stop(t + 0.12);
+}
+
+/* Play explosion — noise burst + pitch drop */
+function playExplosion() {
+  if (!audioCtx) return;
+  const t = audioCtx.currentTime;
+
+  // create noise
+  const bufferSize = audioCtx.sampleRate * 0.25; // 250 ms noise
+  const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+
+  const noise = audioCtx.createBufferSource();
+  noise.buffer = buffer;
+  const noiseGain = audioCtx.createGain();
+  noiseGain.gain.setValueAtTime(0.6, t);
+  noiseGain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+
+  // pitched part
+  const osc = audioCtx.createOscillator();
+  osc.type = 'square';
+  osc.frequency.setValueAtTime(600, t);
+  osc.frequency.exponentialRampToValueAtTime(80, t + 0.25);
+  const oscGain = audioCtx.createGain();
+  oscGain.gain.setValueAtTime(0.6, t);
+  oscGain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+
+  noise.connect(noiseGain);
+  noiseGain.connect(audioCtx.destination);
+  osc.connect(oscGain);
+  oscGain.connect(audioCtx.destination);
+
+  noise.start(t);
+  noise.stop(t + 0.25);
+  osc.start(t);
+  osc.stop(t + 0.25);
+}
+
+/* ========== Utilities ========== */
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const rand = (min,max)=> Math.random()*(max-min)+min;
+
+/* ========== Simple quiz data ========== */
+const QUIZ_DATA = [
+  { question: "What is a subquery?", answers: ["Nested query", "Main query", "Temp table", "Join"], correct: 0 },
+  { question: "What does EXISTS return?", answers: ["True/False", "Count", "Rows", "Error"], correct: 0 },
+  { question: "What does a correlated subquery do?", answers: ["Runs once", "Depends on outer query", "Independent", "Joins tables"], correct: 1 },
+  { question: "What is an index used for?", answers: ["Speed search", "Store data", "Sort data", "Delete rows"], correct: 0 },
+  { question: "Which command removes duplicates and keeps one?", answers: ["DISTINCT", "ROW_NUMBER + DELETE", "UNIQUE", "FILTER"], correct: 1 },
+  { question: "What is a view?", answers: ["Virtual table", "Temp file", "Backup", "Schema"], correct: 0 },
+  { question: "What is the default transaction isolation in MySQL?", answers: ["READ COMMITTED", "REPEATABLE READ", "SERIALIZABLE", "READ UNCOMMITTED"], correct: 1 },
+  { question: "What does ROLLBACK do?", answers: ["Undo", "Save", "Commit", "Drop"], correct: 0 },
+  { question: "Which keyword prevents dirty reads?", answers: ["COMMIT", "ROLLBACK", "TRANSACTION", "LOCK"], correct: 3 },
+  { question: "What does 'WITH RECURSIVE' do?", answers: ["Recursive query", "Loop table", "Trigger", "Join tables"], correct: 0 }
+];
+
+
+
+
+/* ========== DOM refs ========== */
+const container = document.getElementById('game-container');
+const bg = document.getElementById('space-background');
+const introContainer = document.getElementById('intro-container');
+const introImage = document.getElementById('intro-image');
+
+/* ========== Build background stars ========== */
+function buildBackground(){
+  for(let layer=0;layer<3;layer++){
+    const layerEl = document.createElement('div');
+    layerEl.className = 'star-layer';
+    layerEl.style.animation = `scrollStars ${60*(layer+1)}s linear infinite`;
+    bg.appendChild(layerEl);
+    for(let i=0;i<160;i++){
+      const s = document.createElement('div');
+      s.className = 'star';
+      s.style.left = Math.random()*200 + '%';
+      s.style.top  = Math.random()*100 + '%';
+      s.style.opacity = (Math.random()*0.6 + 0.2).toFixed(2);
+      layerEl.appendChild(s);
+    }
+  }
+}
+buildBackground();
+
+/* ========== Core classes (vanilla) ========== */
+class Quiz {
+  constructor(data){ this.questions = data.slice(); this.current = 0; this.score = 0; }
+  getCurrent(){ return this.questions[this.current]; }
+  checkAnswer(i){ const correct = this.getCurrent().correct === i; this.score += correct ? 10 : -5; this.current++; return correct; }
+  isOver(){ return this.current >= this.questions.length; }
+}
+
+/* ---------- Game state & loop ---------- */
+class Game {
+  constructor(){
+    this.quiz = new Quiz(QUIZ_DATA);
+    this.updateFns = [];
+    this.player = null;
+    this.timeLeft = 20;
+    this.timerHandle = null;
+    this.canAnswer = true;
+    this.touchState = {dragging:false, startX:0, startY:0, moved:false};
+    this.init();
+  }
+
+  init(){
+    this.container = container;
+    this.createUIPlaceholders();
+    this.bindInput();
+  }
+
+  createUIPlaceholders(){}
+
+  start(){
+    // enable audio context (must be called from user gesture)
+    ensureAudioContext();
+    introContainer.style.display = 'none';
+    this.spawnPlayer();
+    this.displayQuestion();
+    this.update(); // start RAF
+    this.startTimer();
+    this.displayScore();
+  }
+
+  spawnPlayer(){
+    this.player = new Player({game:this,parent:this.container, startUpdating:fn=>this.startUpdating(fn)});
+  }
+
+  startUpdating(fn){ this.updateFns.push(fn); }
+
+  update(){
+    this.updateFns.forEach(f=>f());
+    requestAnimationFrame(this.update.bind(this));
+  }
+
+  displayQuestion(){
+    if(this.quiz.isOver()){ this.endGame(); return; }
+    this.clearQuestion();
+    const q = this.quiz.getCurrent();
+
+    const qEl = document.createElement('div');
+    qEl.className = 'question';
+    qEl.textContent = q.question;
+    this.container.appendChild(qEl);
+
+    const answerImgs = [
+      'https://mattcannon.games/codepen/quiz/astroid-a.png',
+      'https://mattcannon.games/codepen/quiz/astroid-b.png',
+      'https://mattcannon.games/codepen/quiz/astroid-c.png',
+      'https://mattcannon.games/codepen/quiz/astroid-d.png'
+    ];
+    this.answersEls = [];
+    for(let i=0;i<q.answers.length;i++){
+      const a = document.createElement('div');
+      a.className = 'answer';
+      a.dataset.index = i;
+      a.style.left = (rand(10,90)) + 'vw';
+      a.style.top  = (rand(12,80)) + 'vh';
+      a.style.backgroundImage = `url(${answerImgs[i]})`;
+      const lbl = document.createElement('div');
+      lbl.className = 'label';
+      lbl.textContent = q.answers[i];
+      a.appendChild(lbl);
+      a.animate(
+        [{transform:'translate(-50%,-50%) translateY(0)'},{transform:`translate(-50%,-50%) translateY(-${rand(3,9)}px)`},{transform:'translate(-50%,-50%) translateY(0)'}],
+        {duration: rand(3500,7000), iterations:Infinity, direction:'alternate', easing:'linear'}
+      );
+      this.container.appendChild(a);
+      this.answersEls.push(a);
+    }
+    this.canAnswer = true;
+    this.displayQuestionCount();
+  }
+
+  clearQuestion(){
+    document.querySelectorAll('.question,.answer,.feedback').forEach(n=>n.remove());
+    if(this.timerHandle){ clearInterval(this.timerHandle); this.timerHandle = null; }
+  }
+
+  checkAnswerFromBullet(index, bulletPos){
+    if(!this.canAnswer) return;
+    this.canAnswer = false;
+    const correct = this.quiz.getCurrent().correct === Number(index);
+    if(correct){
+      // play explosion sound
+      playExplosion();
+      this.quiz.score += 10;
+      this.showFeedback('+10', bulletPos.x, bulletPos.y, true);
+      this.markAnswerCorrect(index);
+      setTimeout(()=>{ this.nextQuestionOrEnd(); }, 800);
+    } else {
+      // wrong -> small hit sound
+      playShoot(); // subtle feedback for wrong hit
+      this.quiz.score -= 5;
+      this.showFeedback('-5', bulletPos.x, bulletPos.y, false);
+      this.markAnswerIncorrect(index);
+      setTimeout(()=>{ this.canAnswer = true; }, 600);
+    }
+    this.displayScore();
+  }
+
+  markAnswerCorrect(idx){
+    const el = this.answersEls[idx];
+    if(!el) return;
+    el.animate([{transform:'translate(-50%,-50%) scale(1)'},{transform:'translate(-50%,-50%) scale(1.15)'},{transform:'translate(-50%,-50%) scale(1)'}],{duration:500,iterations:1});
+  }
+  markAnswerIncorrect(idx){
+    const el = this.answersEls[idx];
+    if(!el) return;
+    el.animate([{opacity:1},{opacity:0}],{duration:500,iterations:1}).onfinish = ()=>el.remove();
+  }
+
+  nextQuestionOrEnd(){
+    this.clearQuestion();
+    this.quiz.current++;
+    if(this.quiz.isOver()) this.endGame();
+    else { this.displayQuestion(); this.startTimer(); this.canAnswer = true; }
+  }
+
+  showFeedback(text, x, y, ok){
+    const f = document.createElement('div');
+    f.className = 'feedback';
+    f.style.left = x + 'px';
+    f.style.top  = y + 'px';
+    f.style.color = ok ? '#0f0' : '#ff5050';
+    f.textContent = text;
+    this.container.appendChild(f);
+    setTimeout(()=>f.remove(),900);
+  }
+
+  startTimer(){
+    this.timeLeft = 20;
+    this.updateTimerUI();
+    if(this.timerHandle) clearInterval(this.timerHandle);
+    this.timerHandle = setInterval(()=>{
+      this.timeLeft--;
+      if(this.timeLeft<=0){
+        clearInterval(this.timerHandle);
+        this.showFeedback("Time's up!", window.innerWidth/2, window.innerHeight/2, false);
+        setTimeout(()=>{
+          this.clearQuestion();
+          this.quiz.current++;
+          if(this.quiz.isOver()) this.endGame();
+          else { this.displayQuestion(); this.startTimer(); }
+        },900);
+      } else this.updateTimerUI();
+    },1000);
+  }
+
+  updateTimerUI(){
+    let t = document.querySelector('.timer');
+    if(!t){
+      t = document.createElement('div'); t.className='timer'; document.body.appendChild(t);
+    }
+    t.textContent = this.timeLeft + 's';
+  }
+
+  displayScore(){
+    let s = document.querySelector('.score');
+    if(!s){ s = document.createElement('div'); s.className='score'; document.body.appendChild(s); }
+    s.textContent = 'Score: ' + this.quiz.score;
+  }
+
+  displayQuestionCount(){
+    let c = document.querySelector('.question-count');
+    if(!c){ c = document.createElement('div'); c.className='question-count'; document.body.appendChild(c); }
+    c.textContent = 'Question: ' + (this.quiz.current+1) + '/' + this.quiz.questions.length;
+  }
+
+endGame(){
+  // Clear current question UI
+  this.clearQuestion();
+  document.querySelectorAll('.score,.timer,.question-count').forEach(n=>n.remove());
+
+  const over = document.createElement('div');
+  over.className = 'game-over';
+  over.innerHTML = `
+    <div style="font-size:14px;margin-bottom:.6rem">FINAL SCORE</div>
+    <div style="font-size:20px;font-weight:700">${this.quiz.score}</div>
+    <div style="margin-top:.6rem;display:flex;gap:10px;justify-content:center;">
+      <button id="replayBtn">Play Again</button>
+      <button id="exitBtn" style="font-family:var(--font);padding:.6rem 1rem;border-radius:6px;border:none;background:#ff5050;color:#fff;cursor:pointer;">Exit</button>
+    </div>
+  `;
+  document.body.appendChild(over);
+
+  // 🔁 Play Again – restart quiz from the beginning
+  document.getElementById('replayBtn').addEventListener('click', () => {
+    over.remove();
+
+    // reset quiz state
+    this.quiz = new Quiz(QUIZ_DATA);
+    this.canAnswer = true;
+
+    // remove all game objects
+    document.querySelectorAll('.player,.bullet,.trail-point,.answer,.question,.feedback')
+      .forEach(n => n.remove());
+
+    // spawn fresh player + UI + timer
+    this.spawnPlayer();
+    this.displayQuestion();
+    this.displayScore();
+    this.displayQuestionCount();
+    this.startTimer();
+  });
+
+  // 🚪 Exit – go to index1.html#shoe-cards
+  document.getElementById('exitBtn').addEventListener('click', () => {
+    window.location.href = 'index1.html#shoe-cards';
+  });
+}
+
+
+  bindInput(){
+    const keys = {left:false,up:false,right:false,down:false,space:false};
+    window.addEventListener('keydown', e=>{
+      if(e.key==='ArrowLeft'||e.key==='a'){ keys.left=true }
+      if(e.key==='ArrowRight'||e.key==='d'){ keys.right=true }
+      if(e.key==='ArrowUp'||e.key==='w'){ keys.up=true }
+      if(e.key==='ArrowDown'||e.key==='s'){ keys.down=true }
+      if(e.code==='Space'){ keys.space=true; if(this.player) this.player.shoot(); }
+      if(this.player) this.player.setKeyboard(keys);
+    });
+    window.addEventListener('keyup', e=>{
+      if(e.key==='ArrowLeft'||e.key==='a'){ keys.left=false }
+      if(e.key==='ArrowRight'||e.key==='d'){ keys.right=false }
+      if(e.key==='ArrowUp'||e.key==='w'){ keys.up=false }
+      if(e.key==='ArrowDown'||e.key==='s'){ keys.down=false }
+      if(e.code==='Space'){ keys.space=false }
+      if(this.player) this.player.setKeyboard(keys);
+    });
+
+    // Pointer (mouse & touch) for drag and tap to shoot
+    let isPointerDown = false;
+    let pointerStart = {x:0,y:0,time:0};
+    container.addEventListener('pointerdown', (ev)=>{
+      if(ev.target.closest('.answer') || ev.target.closest('.game-over')) return;
+      // enable audio on first pointerdown as well for some devices
+      ensureAudioContext();
+      isPointerDown=true;
+      pointerStart = {x:ev.clientX,y:ev.clientY,time:Date.now()};
+      if(this.player) this.player.startPointerDrag(ev.clientX, ev.clientY);
+      ev.preventDefault();
+    }, {passive:false});
+
+    container.addEventListener('pointermove', (ev)=>{
+      if(!isPointerDown) return;
+      if(this.player) this.player.pointerMove(ev.clientX, ev.clientY);
+    }, {passive:true});
+
+    container.addEventListener('pointerup', (ev)=>{
+      if(!isPointerDown) return;
+      isPointerDown=false;
+      const dist = Math.hypot(ev.clientX-pointerStart.x, ev.clientY-pointerStart.y);
+      const dt = Date.now()-pointerStart.time;
+      if(dist < 10 && dt < 300){
+        // tap -> shoot (play shoot sound)
+        if(this.player) { this.player.shoot(); playShoot(); }
+      } else {
+        if(this.player) this.player.endPointerDrag();
+      }
+    }, {passive:true});
+
+    // Clicking answers (fallback)
+    document.addEventListener('click', (e)=>{
+      const a = e.target.closest('.answer');
+      if(a && this.canAnswer){
+        const idx = Number(a.dataset.index);
+        const rect = a.getBoundingClientRect();
+        this.checkAnswerFromBullet(idx, {x:rect.left + rect.width/2, y:rect.top + rect.height/2});
+      }
+    });
+  }
+}
+
+/* ========== Player, Bullet, Trail (vanilla) ========== */
+class Player {
+  constructor(opts){
+    this.game = opts.game;
+    this.parent = opts.parent;
+    this.x = 12 * (window.innerWidth/100);
+    this.y = window.innerHeight/2;
+
+    // 🔹 Increased image size for all devices
+    const baseSize = window.innerWidth < 600 ? 140 : 200; 
+    this.width = baseSize;
+    this.height = baseSize;
+
+    this.xvel = 0; 
+    this.yvel = 0;
+    this.friction = 0.88;
+    this.speed = 1.6;
+    this.rotation = 0;
+    this.trail = [];
+    this.trailTimer = 0;
+    this.trailSpawnRate = 6;
+    this.shootLock = false;
+
+    this.el = document.createElement('div'); 
+    this.el.className='player';
+    this.img = document.createElement('img'); 
+    this.img.src='Assets/3.png';
+    this.el.appendChild(this.img);
+    this.parent.appendChild(this.el);
+    this.updateElement();
+
+    this.pointer = {dragging:false, offsetX:0, offsetY:0, lastX:0, lastY:0, moved:false};
+
+    opts.startUpdating(this.update.bind(this));
+  }
+
+  setKeyboard(keys){ this.keyState = keys; }
+
+  startPointerDrag(px,py){
+    this.pointer.dragging = true;
+    this.pointer.lastX = px;
+    this.pointer.lastY = py;
+    this.pointer.offsetX = this.x - px;
+    this.pointer.offsetY = this.y - py;
+    this.pointer.moved = false;
+  }
+
+  pointerMove(px,py){
+    if(!this.pointer.dragging) return;
+    const nx = px + this.pointer.offsetX;
+    const ny = py + this.pointer.offsetY;
+    this.x = clamp(nx, 0, window.innerWidth);
+    this.y = clamp(ny, 0, window.innerHeight);
+    this.pointer.moved = true;
+  }
+
+  endPointerDrag(){ this.pointer.dragging = false; }
+
+  shoot(){
+    if(this.shootLock) return;
+    this.shootLock = true;
+    setTimeout(()=> this.shootLock = false, 120);
+    const pos = {x:this.x, y:this.y};
+    playShoot(); // ✅ keep sound
+    new Bullet({x:pos.x, y:pos.y, dir:this.rotation, parent:this.parent, game:this.game});
+    this.xvel -= Math.cos(this.rotation) * 2.2;
+    this.yvel -= Math.sin(this.rotation) * 2.2;
+  }
+
+  // 🔥 Removed trail creation completely (no fire/flame effect)
+  createTrail(){}
+
+  update(){
+    if(this.keyState){
+      if(this.keyState.up) this.yvel -= this.speed;
+      if(this.keyState.down) this.yvel += this.speed;
+      if(this.keyState.left) this.xvel -= this.speed;
+      if(this.keyState.right) this.xvel += this.speed;
+    }
+
+    if(this.pointer.dragging){ 
+      this.xvel *= 0.6; 
+      this.yvel *= 0.6; 
+    }
+
+    this.x += this.xvel;
+    this.y += this.yvel;
+    this.xvel *= this.friction;
+    this.yvel *= this.friction;
+    this.x = clamp(this.x, 10, window.innerWidth-10);
+    this.y = clamp(this.y, 10, window.innerHeight-10);
+    this.rotation = Math.atan2(this.yvel, Math.max(1, Math.abs(this.xvel))) * 0.6;
+
+    this.updateElement();
+  }
+
+  updateElement(){
+    this.el.style.left = this.x + 'px';
+    this.el.style.top  = this.y + 'px';
+    this.el.style.width = this.width + 'px';
+    this.el.style.height = this.height + 'px';
+    this.el.style.transform = `translate(-50%,-50%) rotate(${this.rotation}rad)`;
+  }
+}
+
+
+class Bullet {
+  constructor(opts){
+    this.x = opts.x; this.y = opts.y; this.dir = opts.dir || 0;
+    this.speed = 14;
+    this.parent = opts.parent;
+    this.game = opts.game;
+    this.el = document.createElement('div'); this.el.className='bullet';
+    this.el.style.width = '10px'; this.el.style.height='10px';
+    this.el.style.background = 'radial-gradient(circle,#fff,#ddd)';
+    this.parent.appendChild(this.el);
+
+    const flash = document.createElement('div');
+    flash.style.position='absolute';
+    flash.style.left=(this.x - 18)+'px';
+    flash.style.top=(this.y - 18)+'px';
+    flash.style.width='30px'; flash.style.height='30px';
+    flash.style.borderRadius='50%';
+    flash.style.background='#FFFED1'; flash.style.opacity='0.9';
+    this.parent.appendChild(flash);
+    setTimeout(()=>flash.remove(),80);
+
+    this._update = this.update.bind(this);
+    Bullet._live = Bullet._live || [];
+    Bullet._live.push(this);
+    if(!Bullet._rafStarted){
+      Bullet._rafStarted = true;
+      requestAnimationFrame(() => Bullet._loop());
+    }
+  }
+
+  update(){
+    this.x += Math.cos(this.dir) * this.speed;
+    this.y += Math.sin(this.dir) * this.speed;
+    this.el.style.left = this.x + 'px';
+    this.el.style.top  = this.y + 'px';
+    if(this.x < -50 || this.y < -50 || this.x > window.innerWidth + 50 || this.y > window.innerHeight + 50){
+      this.destroy();
+      return;
+    }
+    const answers = document.querySelectorAll('.answer');
+    for(let i=0;i<answers.length;i++){
+      const a = answers[i];
+      const rect = a.getBoundingClientRect();
+      if(this.x >= rect.left && this.x <= rect.right && this.y >= rect.top && this.y <= rect.bottom){
+        const idx = Number(a.dataset.index);
+        this.game.checkAnswerFromBullet(idx, {x:this.x, y:this.y});
+        this.destroy();
+        return;
+      }
+    }
+  }
+
+  destroy(){
+    this.el.remove();
+    const idx = Bullet._live.indexOf(this);
+    if(idx !== -1) Bullet._live.splice(idx,1);
+  }
+
+  static _loop(){
+    for(let i=Bullet._live.length-1;i>=0;i--){
+      Bullet._live[i].update();
+    }
+    if(Bullet._live.length>0) requestAnimationFrame(Bullet._loop);
+    else Bullet._rafStarted = false;
+  }
+}
+
+/* ========== Boot ========== */
+const G = new Game();
+
+// Start on intro-image click (user gesture enables audio)
+introImage.addEventListener('click', ()=>{
+  ensureAudioContext(); // make sure audio is allowed
+  G.start();
+});
+
+// Also allow Start via keyboard Enter/Space
+window.addEventListener('keydown', (e)=>{
+  if(introContainer.style.display !== 'none' && (e.code === 'Enter' || e.code === 'Space')){
+    ensureAudioContext();
+    introContainer.style.display = 'none';
+    G.start();
+  }
+});
+
+/* Make responsive on resize */
+window.addEventListener('resize', ()=>{
+  const pl = document.querySelector('.player');
+  if(pl && G.player){
+    const p = G.player;
+    p.x = clamp(p.x, 10, window.innerWidth-10);
+    p.y = clamp(p.y, 10, window.innerHeight-10);
+    p.updateElement();
+  }
+  document.querySelectorAll('.answer').forEach(a=>{
+    const rect = a.getBoundingClientRect();
+    if(rect.left < 0) a.style.left = '6vw';
+    if(rect.top < 0) a.style.top = '10vh';
+  });
+});
+</script>
+</body>
+</html>

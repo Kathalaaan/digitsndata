@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Marvel x Fanta Scroll Experience</title>
+
+  <!-- Icons / Fonts / Plugins -->
+  <link rel="icon" href="img/logo-name.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightslider/1.1.6/css/lightslider.min.css" />
+
+  <!-- Your combined stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- SECTION 1: Avengers (Video Hero) -->
+  <section class="hero">
+    <header>
+      <a href="#"><img src="img/Untitled design (91).png" class="logo" alt="logo" /></a>
+      <div class="toggle" onclick="toggleMenu();"><i class="fas fa-bars"></i></div>
+      <ul class="navigation">
+        <li><a href="#shoe-cards">Quiz</a></li>
+        <li><a href="Carousel.html">Case Study</a></li>
+        <li><a href="https://roadmap.sh/sql">Roadmap</a></li>
+        <li><a href="#SQL">6 Week SQL Challenge</a></li>
+        <li><a href="https://www.linkedin.com/company/digits-n-data/?viewAsMember=true">Linkedin Page</a></li>
+       
+      </ul>
+    </header>
+
+    <video src="img/Untitled design (88).mp4" muted loop autoplay></video>
+
+    <div class="content">
+      <div class="textBox">
+        <h2><span>Avengers</span> (Digits n Data)</h2>
+        <a href="#">Watch trailer now</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: Character Slider (LightSlider) -->
+  <section id="marvel-characters">
+    <h1>Choose a Character</h1>
+    <div class="container">
+      <ul id="autoWidth" class="cs-hidden">
+        <li class="item-a">
+          <div class="box">
+            <p class="marvel">MARVEL</p>
+            <img src="https://i.postimg.cc/L552NTd2/Ant-Man.png" alt="Ant-Man" class="model">
+            <div class="details">
+              <img src="https://i.postimg.cc/15Lsrwv1/Ant-Man-logo.png" alt="Ant-Man" class="logo">
+              <p>Scott Lang, a reformed thief, steals the Ant-Man suit from Hank Pym to save his daughter, Cassie.</p>
+            </div>
+          </div>
+        </li>
+        <li class="item-a">
+          <div class="box">
+            <p class="marvel">MARVEL</p>
+            <img src="https://i.postimg.cc/sgd86c7y/DeadPool.png" alt="Deadpool" class="model">
+            <div class="details">
+              <img src="https://i.postimg.cc/59rDv1tX/Deadpool-logo.png" alt="Deadpool" class="logo">
+              <p>Deadpool made his first appearance in The New Mutants #98 in February 1991 as a supervillain.</p>
+            </div>
+          </div>
+        </li>
+        <li class="item-a">
+          <div class="box">
+            <p class="marvel">MARVEL</p>
+            <img src="https://i.postimg.cc/j2Tc68Bk/Spider-Man.png" alt="Spider-Man" class="model">
+            <div class="details">
+              <img src="https://i.postimg.cc/tTWDx0vx/Spider-Man-logo.png" alt="Spider-Man" class="logo">
+              <p>Peter Parker gains superhuman abilities after being bitten by a radioactive spider during a school trip.</p>
+            </div>
+          </div>
+        </li>
+        <li class="item-a">
+          <div class="box">
+            <p class="marvel">MARVEL</p>
+            <img src="https://i.postimg.cc/kX1NDXMH/Venom.png" alt="Venom" class="model">
+            <div class="details">
+              <img src="https://i.postimg.cc/vTXrrGrc/Venom-logo.png" alt="Venom" class="logo">
+              <p>Venom is Eddie Brock, a journalist whose life takes a dark turn after bonding with an alien symbiote.</p>
+            </div>
+          </div>
+        </li>
+        <li class="item-a">
+          <div class="box">
+            <p class="marvel">MARVEL</p>
+            <img src="https://i.postimg.cc/BnPh015p/Thor.png" alt="Thor" class="model">
+            <div class="details">
+              <img src="https://i.postimg.cc/4Ng4tzy7/Thor-logo.png" alt="Thor" class="logo">
+              <p>Thor, son of Odin, is the God of Thunder, known for his bravery and his enchanted hammer, Mjolnir.</p>
+            </div>
+          </div>
+        </li>
+        <li class="item-a">
+          <div class="box">
+            <p class="marvel">MARVEL</p>
+            <img src="https://i.postimg.cc/vBGkbLv9/IronMan.png" alt="Iron Man" class="model">
+            <div class="details">
+              <img src="https://i.postimg.cc/rsj8qwWy/Iron-Man-logo.png" alt="Iron Man" class="logo">
+              <p>Tony Stark, a genius inventor, becomes Iron Man using advanced technology to fight for justice.</p>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <p id="welcomeMsg"></p>
+  </section>
+
+  <!-- SECTION 3: Fanta Scroll Section (inserted immediately after characters) -->
+  <div id="fanta-section">
+    <div class="one">
+      <h1>SQL</h1>
+      <img id="orange-cut" src="" alt=>
+      <img id="fanta" src="Assets/Untitled design (92).png" alt="fanta">
+      <img id="orange" src="" >
+      <img id="leaf" src="">
+      <img id="leaf2" src="" >
+      <img id="leaf3" src="" >
+    </div>
+
+    <div class="two">
+      <div class="lft-two">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#e04428"
+            d="M41.5,-59.5C49.8,-51.1,49.7,-33.6,50.7,-19.2C51.7,-4.7,53.8,6.7,52.4,18.9C51.1,31.1,46.3,44.1,36.9,52.9C27.6,61.8,13.8,66.5,-2.5,70C-18.8,73.4,-37.7,75.6,-52.5,68.5C-67.3,61.5,-78.2,45.2,-84.5,27.1C-90.9,9,-92.7,-10.8,-80.5,-19.3C-68.3,-27.8,-42.1,-24.8,-26.3,-30.8C-10.6,-36.8,-5.3,-51.7,5.7,-59.5C16.6,-67.3,33.2,-68,41.5,-59.5Z"
+            transform="translate(100 100)" />
+        </svg>
+      </div>
+      <div class="rght-two">
+        <h1>Six weeks to save reality</h1>
+        <p>
+          Time is breaking. The Infinity Stones are back... scattered, unstable, rewriting reality itself. Tony Stark’s
+          A.I. has returned, half-corrupted, sending one final message: “Find the truth.” Avengers are missing, systems
+          are failing and a hidden enemy is moving through time. Your mission: decrypt the clues, trace the betrayals,
+          and restore the balance. Six weeks. Six challenges. One final chance to save the reality.
+        </p>
+      </div>
+    </div>
+  </div>
+
+<!-- SECTION 4: Take a Quiz (Shoe Cards) -->
+<section id="shoe-cards">
+  <h1 class="quiz-heading">Take a Quiz</h1>
+  <main class="container">
+    <section class="card red">
+      <div class="shoe">
+        <img src="img/1.png" alt="Nike Red" />
+      </div>
+      <div class="info">
+        <h2>EASY LEVEL</h2>
+        <p>Easy SQL Starter – Learn with ease</p>
+        <div class="price"></div>
+      </div>
+      <div class="btns">
+       <button class="buy" onclick="window.location.href='quiz1.html'">Start Now</button>
+
+        <button class="fav">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#000" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+            <path d="M12 2 L15 10 L24 10 L17 15 L20 24 L12 19 L4 24 L7 15 L0 10 L9 10 Z" />
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <section class="card blue">
+      <div class="shoe">
+        <img src="img/2.png" alt="Nike Blue" />
+      </div>
+      <div class="info">
+        <h2>MEDIUM LEVEL</h2>
+        <p>SQL Mid Challenge – Grow your skills</p>
+        <div class="price"></div>
+      </div>
+      <div class="btns">
+        <button class="buy" onclick="window.location.href='quiz2.html'">Start Now</button>
+
+        <button class="fav">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#000" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+            <path d="M12 2 L15 10 L24 10 L17 15 L20 24 L12 19 L4 24 L7 15 L0 10 L9 10 Z" />
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <section class="card green">
+      <div class="shoe">
+        <img src="img/3.png" alt="Nike Green" />
+      </div>
+      <div class="info">
+        <h2>HARD LEVEL</h2>
+        <p>Hard SQL Mastery – Think with power</p>
+        <div class="price"></div>
+      </div>
+      <div class="btns">
+    <button class="buy" onclick="window.location.href='quiz3.html'">Start Now</button>
+
+        <button class="fav">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#000" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+            <path d="M12 2 L15 10 L24 10 L17 15 L20 24 L12 19 L4 24 L7 15 L0 10 L9 10 Z" />
+          </svg>
+        </button>
+      </div>
+    </section>
+  </main>
+</section>
+
+<script>
+  // GSAP Animation for Shoe Cards
+  gsap.from("#shoe-cards .card", {
+    opacity: 0,
+    y: 100,
+    duration: 1,
+    stagger: 0.3,
+    ease: "power3.out",
+    scrollTrigger: {
+      trigger: "#shoe-cards",
+      start: "top 85%",
+    },
+  });
+</script>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lightslider/1.1.6/js/lightslider.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <!-- Your script file -->
+  <script src="script.js"></script>
+
+  <!-- =========================
+SECTION 5: Ironman Parallax ScrollTrigger
+========================= -->
+<!-- =========================
+SECTION: Ironman Parallax ScrollTrigger (FULL SECTION)
+========================= -->
+<section id="ironman-parallax" aria-label="Ironman parallax">
+
+  <!-- Parallax layers (unchanged) -->
+  <div class="ironman-layer-wrap">
+    <img src="img/background.jpg" id="iron-bg" alt="background">
+    <img src="img/luna.png" id="iron-luna" alt="moon">
+    <img src="img/nube1.png" id="iron-nube1" alt="cloud1">
+    <img src="img/nube2.png" id="iron-nube2" alt="cloud2">
+    <img src="img/jet.png" id="iron-jet" alt="jet">
+    <img src="img/ironman.png" id="iron-ironman" alt="ironman">
+  </div>
+
+  <!-- REPLACED CONTENT: HackerRank-style SQL Challenge -->
+  <div class="ironman-content">
+
+    <div class="sql-challenge-wrap">
+      <div class="sql-header">
+        <div>
+          <h2>SQL • 6-Week Challenge</h2>
+          <p class="sql-lead">Practice real SQL problems — ranked by difficulty. Click a card to start a challenge or view details.</p>
+        </div>
+
+       
+      </div>
+<section id="SQL">
+      <div class="sql-grid">
+
+        <article class="sql-card" data-difficulty="easy">
+          <div class="card-left"><div class="card-icon">1</div></div>
+          <div class="card-main">
+            <div class="card-title">Week 1 </div>
+            <div class="card-meta">Easy • 10 Problems</div>
+          </div>
+          <a class="card-btn" href="1.html">Start ▶</a>
+        </article>
+
+        <article class="sql-card" data-difficulty="easy">
+          <div class="card-left"><div class="card-icon">2</div></div>
+          <div class="card-main">
+            <div class="card-title">Week 2 • Filtering (WHERE)</div>
+            <div class="card-meta">Easy • 12 Problems</div>
+          </div>
+          <a class="card-btn" href="#">Start ▶</a>
+        </article>
+
+        <article class="sql-card" data-difficulty="medium">
+          <div class="card-left"><div class="card-icon">3</div></div>
+          <div class="card-main">
+            <div class="card-title">Week 3 • Aggregation & GROUP BY</div>
+            <div class="card-meta">Medium • 10 Problems</div>
+          </div>
+          <a class="card-btn" href="#">Start ▶</a>
+        </article>
+
+        <article class="sql-card" data-difficulty="medium">
+          <div class="card-left"><div class="card-icon">4</div></div>
+          <div class="card-main">
+            <div class="card-title">Week 4 • Joins</div>
+            <div class="card-meta">Medium • 14 Problems</div>
+          </div>
+          <a class="card-btn" href="#">Start ▶</a>
+        </article>
+
+        <article class="sql-card" data-difficulty="hard">
+          <div class="card-left"><div class="card-icon">5</div></div>
+          <div class="card-main">
+            <div class="card-title">Week 5 • Window Functions</div>
+            <div class="card-meta">Hard • 8 Problems</div>
+          </div>
+          <a class="card-btn" href="#">Start ▶</a>
+        </article>
+
+        <article class="sql-card" data-difficulty="hard">
+          <div class="card-left"><div class="card-icon">6</div></div>
+          <div class="card-main">
+            <div class="card-title">Week 6 • Advanced & Optimization</div>
+            <div class="card-meta">Hard • 10 Problems</div>
+          </div>
+          <a class="card-btn" href="#">Start ▶</a>
+        </article>
+
+      </div>
+    </div>
+
+  </div>
+  </section>
+</section>
+
+<!-- =========================
+STYLES (parallax + SQL challenge)
+========================= -->
+<style>
+/* Base layout */
+#ironman-parallax {
+  position: relative;
+  width: 100%;
+  background: #0a2a43;
+  overflow-x: hidden;
+  height: 200vh;
+}
+.ironman-layer-wrap {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+#ironman-parallax img {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Parallax layers */
+#iron-bg { top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+#iron-luna { top: -20px; left: 5%; width: 60%; max-width: 900px; z-index: 2; }
+#iron-nube1 { top: 10px; left: 0; width: 55%; max-width: 700px; z-index: 3; }
+#iron-nube2 { top: 80px; right: 0; width: 55%; max-width: 700px; z-index: 3; }
+#iron-jet { top: 60px; left: 15%; width: 35%; max-width: 420px; transform: scale(0); z-index: 4; }
+#iron-ironman { top: 110%; left: 50%; transform: translateX(-50%) scale(0); width: 70%; max-width: 1100px; z-index: 10; }
+
+/* SQL Challenge Section */
+.ironman-content { padding: 120px 20px; color: #fff; background: #0a2a43; }
+.sql-challenge-wrap { max-width: 1100px; margin: auto; }
+
+.sql-header { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  flex-wrap: wrap; 
+  gap: 20px; 
+
+  /* 🔥 spacing between header and grid */
+  margin-bottom: 24px; 
+}
+.sql-lead { color: #cfe9ff; font-size: 1rem; }
+
+.sql-controls { display: flex; gap: 12px; }
+.sql-controls input,
+.sql-controls select {
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  color: #fff;
+}
+
+.sql-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+/* 🔥 Mobile spacing improvements */
+@media (max-width: 768px) {
+  .sql-header {
+    margin-bottom: 30px;  /* bigger gap on mobile */
+  }
+}
+.sql-card {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #e2e2e2;
+  padding: 14px 18px;
+  border-radius: 8px;
+  width: 100%;
+  justify-content: space-between;
+  transition: 0.2s ease;
+}
+
+.sql-card:hover {
+  border-color: #00b35f;
+  box-shadow: 0px 3px 8px rgba(0,0,0,0.08);
+}
+
+.card-left {
+  width: 40px;
+  height: 40px;
+  background: #00b35f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  border-radius: 6px;
+  font-weight: bold;
+  margin-right: 14px;
+}
+
+.card-main {
+  flex: 1;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color:black
+}
+
+.card-meta {
+  font-size: 13px;
+  color: #666;
+  margin-top: 2px;
+}
+
+.card-btn {
+  background: #00b35f;
+  padding: 8px 14px;
+  border-radius: 6px;
+  color: white;
+  font-size: 14px;
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Responsive for small screens */
+@media (max-width: 600px) {
+  .sql-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .card-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Keep your existing responsive parallax tweaks */
+@media (max-width: 1024px) {
+  #iron-luna, #iron-nube1, #iron-nube2 { width: 75%; }
+  #iron-jet { width:45%; left:10%; }
+  #iron-ironman { width:110%; }
+}
+
+@media (max-width: 768px) {
+  #iron-luna, #iron-nube1, #iron-nube2 { width:85%; }
+  #iron-jet { width:55%; left:5%; }
+  #iron-ironman { width:160%; }
+}
+
+@media (max-width: 480px) {
+  #iron-luna, #iron-nube1, #iron-nube2 { width:90%; }
+  #iron-jet { width:65%; }
+  #iron-ironman { width:200%; }
+}
+</style>
+
+<!-- =========================
+GSAP Parallax Script (same as your original)
+========================= -->
+<script>
+window.addEventListener('load', () => {
+
+  if (!window.gsap || !window.ScrollTrigger) {
+    console.error("GSAP / ScrollTrigger missing");
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.to('#iron-bg', { y:250, scale:1.25, ease:'none',
+    scrollTrigger:{ trigger:'#ironman-parallax', scrub:1 } });
+
+  gsap.to('#iron-luna', { x:-400, scale:1.6, ease:'none',
+    scrollTrigger:{ trigger:'#ironman-parallax', scrub:1 } });
+
+  gsap.to('#iron-nube1', { x:-400, ease:'none',
+    scrollTrigger:{ trigger:'#ironman-parallax', scrub:1 } });
+
+  gsap.to('#iron-nube2', { x:300, ease:'none',
+    scrollTrigger:{ trigger:'#ironman-parallax', scrub:1 } });
+
+  gsap.to('#iron-jet', { x:1000, y:220, scale:3.8, ease:'power1.out',
+    scrollTrigger:{ trigger:'#ironman-parallax', scrub:1 } });
+
+  gsap.to('#iron-ironman', { y:-1700, scale:1, rotate:-50, ease:'power2.out',
+    scrollTrigger:{ trigger:'#ironman-parallax', scrub:1 } });
+
+});
+</script>
+
+<footer class="simple-footer">
+  <p>© 2025 Digits n Data. All rights reserved.</p>
+</footer>
+<style>
+  .simple-footer {
+  width: 100%;
+  text-align: center;
+  padding: 16px 10px;
+  background: #0d1b2a;
+  color: #cfe9ff;
+  font-size: 0.9rem;
+  margin-top: 0;  /* removed gap */
+}
+
+/* Responsive for small screens */
+@media (max-width: 480px) {
+  .simple-footer {
+    font-size: 0.85rem;
+    padding: 14px 8px;
+  }
+}
+
+</style>
+
+</body>
+</html>
